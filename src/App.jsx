@@ -8,7 +8,7 @@ const C = {
   green: "#34d399", red: "#f87171", blue: "#60a5fa",
 };
 
-const BASE = "https://spring-boot-bankapi-production.up.railway.app";
+const BASE = "http://localhost:8080";
 
 async function apiFetch(path, opts = {}) {
   const token = localStorage.getItem("jwtToken");
@@ -151,22 +151,30 @@ const NAV_ADMIN = [
 ];
 
 function Sidebar({ page, setPage, customer, onLogout }) {
-  return (
-    <aside style={{ width: 230, flexShrink: 0, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", minHeight: "100vh", position: "sticky", top: 0 }}>
+  const [open, setOpen] = useState(false);
+  const isMobile = window.innerWidth < 768;
+
+  function nav(id) { setPage(id); setOpen(false); }
+
+  const sidebarContent = (
+    <>
       <div style={{ padding: "22px 20px 16px", borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 34, height: 34, borderRadius: 8, background: `linear-gradient(135deg,${C.gold},${C.goldDim})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "#080b12", fontFamily: "'Playfair Display',serif" }}>B</div>
-          <div>
+          <div style={{ flex: 1 }}>
             <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 17, fontWeight: 700, color: C.gold, letterSpacing: "0.04em" }}>BankApi</div>
             <div style={{ fontSize: 10, color: C.textDim, letterSpacing: "0.08em", textTransform: "uppercase" }}>Private Banking</div>
           </div>
+          {isMobile && (
+            <div onClick={() => setOpen(false)} style={{ cursor: "pointer", color: C.textSub, fontSize: 20, lineHeight: 1 }}>✕</div>
+          )}
         </div>
       </div>
       <nav style={{ flex: 1, padding: "12px 10px", overflowY: "auto" }}>
         {NAV_USER.map(p => {
           const a = page === p.id;
           return (
-            <div key={p.id} onClick={() => setPage(p.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 2, background: a ? C.goldGlow : "transparent", color: a ? C.gold : C.textSub, fontWeight: a ? 600 : 400, fontSize: 14, borderLeft: `2px solid ${a ? C.gold : "transparent"}`, transition: "all .15s" }}>
+            <div key={p.id} onClick={() => nav(p.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 2, background: a ? C.goldGlow : "transparent", color: a ? C.gold : C.textSub, fontWeight: a ? 600 : 400, fontSize: 14, borderLeft: `2px solid ${a ? C.gold : "transparent"}`, transition: "all .15s" }}>
               <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{p.icon}</span>{p.label}
             </div>
           );
@@ -177,7 +185,7 @@ function Sidebar({ page, setPage, customer, onLogout }) {
             {NAV_ADMIN.map(p => {
               const a = page === p.id;
               return (
-                <div key={p.id} onClick={() => setPage(p.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 2, background: a ? "rgba(212,168,83,0.12)" : "transparent", color: a ? C.gold : C.textSub, fontWeight: a ? 600 : 400, fontSize: 14, borderLeft: `2px solid ${a ? C.gold : "transparent"}`, transition: "all .15s" }}>
+                <div key={p.id} onClick={() => nav(p.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 2, background: a ? "rgba(212,168,83,0.12)" : "transparent", color: a ? C.gold : C.textSub, fontWeight: a ? 600 : 400, fontSize: 14, borderLeft: `2px solid ${a ? C.gold : "transparent"}`, transition: "all .15s" }}>
                   <span style={{ fontSize: 15, width: 20, textAlign: "center" }}>{p.icon}</span>{p.label}
                 </div>
               );
@@ -195,6 +203,28 @@ function Sidebar({ page, setPage, customer, onLogout }) {
         </div>
         <Btn variant="ghost" sm full onClick={onLogout}>Wyloguj się</Btn>
       </div>
+    </>
+  );
+
+  if (isMobile) return (
+    <>
+      {/* Górny pasek mobile */}
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: C.surface, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", padding: "12px 16px", gap: 12 }}>
+        <div onClick={() => setOpen(v => !v)} style={{ cursor: "pointer", fontSize: 22, color: C.textSub, lineHeight: 1 }}>☰</div>
+        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 17, fontWeight: 700, color: C.gold }}>BankApi</div>
+      </div>
+      {/* Overlay */}
+      {open && <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.5)" }} />}
+      {/* Sidebar drawer */}
+      <aside style={{ position: "fixed", top: 0, left: open ? 0 : -260, zIndex: 300, width: 240, height: "100vh", background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "left .25s ease" }}>
+        {sidebarContent}
+      </aside>
+    </>
+  );
+
+  return (
+    <aside style={{ width: 230, flexShrink: 0, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", minHeight: "100vh", position: "sticky", top: 0 }}>
+      {sidebarContent}
     </aside>
   );
 }
@@ -970,7 +1000,7 @@ export default function App() {
       <style>{FONTS + RESET}</style>
       <div style={{ display: "flex", height: "100%", minHeight: "100vh", background: C.bg }}>
         <Sidebar page={page} setPage={setPage} customer={customer} onLogout={logout} />
-        <div style={{ flex: 1, overflowY: "auto" }}>{views[page] ?? views.dashboard}</div>
+      <div style={{ flex: 1, overflowY: "auto", paddingTop: window.innerWidth < 768 ? 56 : 0 }}>{views[page] ?? views.dashboard}</div>
       </div>
     </>
   );
