@@ -1,16 +1,38 @@
-# React + Vite
+# BankApp 💳
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A frontend for full-stack banking application built with React.
 
-Currently, two official plugins are available:
+🌐 **Live Demo:** https://bank-frontend-bay.vercel.app  
+🔗 **Backend Repository:** https://github.com/kyrylo-sketch/spring-boot-BankApi  
+📖 **API Docs:** https://spring-boot-bankapi-production.up.railway.app/swagger-ui/index.html
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- **Frontend:** React, JavaScript
+- **Deployment:** Vercel
 
-## React Compiler
+## Features
+- JWT authentication with refresh tokens
+- Role-based access control (Admin/User)
+- Dashboard with account overview
+- Transaction history
+- Transfer between accounts
+- Deposit and withdrawal
+- Currency display (PLN, EUR, USD)
+- Admin panel for managing customers and accounts
+- Mobile responsive design
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Setup
+```bash
+git clone https://github.com/kyrylo-sketch/bank-frontend
+cd bank-frontend
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Change API URL in `src/App.jsx`:
+```javascript
+const BASE = "http://localhost:8080";
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Backend
+Backend repository: https://github.com/kyrylo-sketch/spring-boot-BankApi
