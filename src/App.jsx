@@ -8,7 +8,7 @@ const C = {
   green: "#34d399", red: "#f87171", blue: "#60a5fa",
 };
 
-const BASE = "https://spring-boot-bankapi-production.up.railway.app";
+const BASE = "http://localhost:8080";
 
 async function apiFetch(path, opts = {}) {
   const token = localStorage.getItem("jwtToken");
